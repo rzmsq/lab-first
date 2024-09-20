@@ -18,19 +18,20 @@ int main(int argc, char *args[])
             std::cout << "Window could not be created! SDL_Error: " << SDL_GetError() << '\n';
         else
         {
-            SDL_SetRenderDrawColor(renderer, 0x22, 0x2D, 0x32, 0xFF);
-            SDL_RenderClear(renderer);
+            Button createBtn(860, 50, 128, 36);
+            Button moveBtn(860, 100, 128, 36);
 
-            draw_cart(renderer);
+            Button circleBtn(860, 100, 128, 36);
+            Button rectBtn(860, 150, 128, 36);
+            Button ellipseBtn(860, 200, 128, 36);
 
-            Button createBtn(860, 50, 128, 36, renderer);
-            draw_btn(renderer, createBtn, "Create");
-
-            Circle circ = Circle();
+            draw_app(renderer, createBtn);
             SDL_RenderPresent(renderer);
 
+            Circle circ = Circle();
+
             SDL_Event e;
-            bool quit{false};
+            bool quit{false}, isSubMenuCreate{false}, isDraw{false};
             while (quit == false)
             {
                 while (SDL_PollEvent(&e))
@@ -38,11 +39,34 @@ int main(int argc, char *args[])
                     if (e.type == SDL_QUIT)
                         quit = true;
                     if (e.type == SDL_MOUSEBUTTONDOWN)
-                        if (e.button.button == SDL_BUTTON_LEFT && createBtn.is_pressed())
+                    {
+                        if (e.button.button == SDL_BUTTON_LEFT && createBtn.is_pressed() && !isSubMenuCreate)
                         {
+                            draw_btn(renderer, circleBtn, "Circle");
+                            draw_btn(renderer, rectBtn, "Rectangle");
+                            draw_btn(renderer, ellipseBtn, "Ellipse");
+                            SDL_RenderPresent(renderer);
+
+                            isSubMenuCreate = true;
+                        }
+                        if (e.button.button == SDL_BUTTON_LEFT && circleBtn.is_pressed() && isSubMenuCreate)
+                        {
+                            draw_app(renderer, createBtn);
+                            draw_btn(renderer, moveBtn, "Move");
+                            circ.show(renderer);
+                            SDL_RenderPresent(renderer);
+                            isSubMenuCreate = false;
+                            isDraw = true;
+                        }
+                        if (e.button.button == SDL_BUTTON_LEFT && moveBtn.is_pressed() && isDraw)
+                        {
+                            draw_app(renderer, createBtn);
+                            draw_btn(renderer, moveBtn, "Move");
+                            circ.move();
                             circ.show(renderer);
                             SDL_RenderPresent(renderer);
                         }
+                    }
                 }
             }
         }
@@ -56,12 +80,22 @@ int main(int argc, char *args[])
     return 0;
 }
 
-void draw_btn(SDL_Renderer *renderer, Button &createBtn, const std::string &name)
+void draw_app(SDL_Renderer *renderer, Button &createBtn)
+{
+    SDL_SetRenderDrawColor(renderer, 0x22, 0x2D, 0x32, 0xFF);
+    SDL_RenderClear(renderer);
+
+    draw_cart(renderer);
+
+    draw_btn(renderer, createBtn, "Create");
+}
+
+void draw_btn(SDL_Renderer *renderer, Button &btn, const std::string &name)
 {
     SDL_SetRenderDrawColor(renderer, 0x69, 0x69, 0x69, 0xFF);
-    SDL_RenderFillRect(renderer, &createBtn.btn);
-    SDL_RenderDrawRect(renderer, &createBtn.btn);
-    createBtn.set_label(renderer, name);
+    SDL_RenderFillRect(renderer, &btn.btn);
+    SDL_RenderDrawRect(renderer, &btn.btn);
+    btn.set_label(renderer, name);
 }
 
 void draw_cart(SDL_Renderer *renderer)

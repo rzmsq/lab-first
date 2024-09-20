@@ -5,6 +5,7 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <iostream>
 #include <string>
+#include <random>
 
 const int center_cart_x{410};
 const int center_cart_y{300};
