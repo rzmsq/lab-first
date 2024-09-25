@@ -4,7 +4,14 @@ Circle::Circle()
 {
     this->x = center_cart_x;
     this->y = center_cart_y;
-    this->rad = 10;
+
+    std::random_device rd;
+    std::mt19937 generator{rd()};
+    const int diap_x[2] = {-50, 50};
+    std::uniform_int_distribution<int> distribution_x(10, 50);
+    int rand_rad = distribution_x(generator);
+    this->rad = rand_rad;
+
     this->r = 255;
     this->g = 255;
     this->b = 255,
@@ -28,9 +35,14 @@ const void Circle::show(SDL_Renderer *renderer) const
     circleRGBA(renderer, x, y, rad, r, g, b, a);
 }
 
-const void Circle::change_rad(const int &_rad)
+const void Circle::change_rad(const int &_rad, const bool &flg)
 {
-    this->rad = _rad;
+    if (this->rad > 273 && flg)
+        return;
+    else if (this->rad < 8 && !flg)
+        return;
+
+    this->rad += _rad;
 }
 
 const void Circle::move()
@@ -38,14 +50,20 @@ const void Circle::move()
     std::random_device rd;
     std::mt19937 generator{rd()};
 
-    const int diap_x[2] = {20, 820};
+    const int diap_x[2] = {-50, 50};
     std::uniform_int_distribution<int> distribution_x(diap_x[0], diap_x[1]);
     int rand_x = distribution_x(generator);
 
-    const int diap_y[2] = {20, 620};
+    const int diap_y[2] = {-50, 50};
     std::uniform_int_distribution<int> distribution_y(diap_y[0], diap_y[1]);
     int rand_y = distribution_y(generator);
 
-    this->x = rand_x;
-    this->y = rand_y;
+    this->x += rand_x;
+    this->y += rand_y;
+
+    if (this->x < 20 || this->x > 810 || this->y < 20 || this->y > 620)
+    {
+        this->x = center_cart_x;
+        this->y = center_cart_y;
+    }
 }

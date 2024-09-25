@@ -40,7 +40,7 @@ int main(int argc, char *args[])
                         quit = true;
                     if (e.type == SDL_MOUSEBUTTONDOWN)
                     {
-                        if (e.button.button == SDL_BUTTON_LEFT && createBtn.is_pressed() && !isSubMenuCreate)
+                        if (e.button.button == SDL_BUTTON_LEFT && createBtn.is_pressed())
                         {
                             draw_btn(renderer, circleBtn, "Circle");
                             draw_btn(renderer, rectBtn, "Rectangle");
@@ -48,15 +48,19 @@ int main(int argc, char *args[])
                             SDL_RenderPresent(renderer);
 
                             isSubMenuCreate = true;
+                            continue;
                         }
                         if (e.button.button == SDL_BUTTON_LEFT && circleBtn.is_pressed() && isSubMenuCreate)
                         {
+                            circ.~Circle();
+                            circ = Circle();
                             draw_app(renderer, createBtn);
                             draw_btn(renderer, moveBtn, "Move");
                             circ.show(renderer);
                             SDL_RenderPresent(renderer);
                             isSubMenuCreate = false;
                             isDraw = true;
+                            continue;
                         }
                         if (e.button.button == SDL_BUTTON_LEFT && moveBtn.is_pressed() && isDraw)
                         {
@@ -65,6 +69,28 @@ int main(int argc, char *args[])
                             circ.move();
                             circ.show(renderer);
                             SDL_RenderPresent(renderer);
+                            continue;
+                        }
+                    }
+                    if (e.type == SDL_KEYDOWN)
+                    {
+                        if (e.key.keysym.sym == SDLK_KP_PLUS)
+                        {
+                            draw_app(renderer, createBtn);
+                            draw_btn(renderer, moveBtn, "Move");
+                            circ.change_rad(5, true);
+                            circ.show(renderer);
+                            SDL_RenderPresent(renderer);
+                            continue;
+                        }
+                        if (e.key.keysym.sym == SDLK_KP_MINUS)
+                        {
+                            draw_app(renderer, createBtn);
+                            draw_btn(renderer, moveBtn, "Move");
+                            circ.change_rad(-5, false);
+                            circ.show(renderer);
+                            SDL_RenderPresent(renderer);
+                            continue;
                         }
                     }
                 }
