@@ -7,7 +7,6 @@ Circle::Circle()
 
     std::random_device rd;
     std::mt19937 generator{rd()};
-    const int diap_x[2] = {-50, 50};
     std::uniform_int_distribution<int> distribution_x(10, 50);
     int rand_rad = distribution_x(generator);
     this->rad = rand_rad;

@@ -41,7 +41,7 @@ int main(int argc, char *args[])
 
             std::vector<Circle> circs{};
             std::vector<Rect> rects{};
-            std::vector<Rect> ellps{};
+            std::vector<Ellips> ellps{};
 
             SDL_Event e;
             bool quit{false};
@@ -59,7 +59,7 @@ int main(int argc, char *args[])
                             codeB = -1;
                             draw_app(renderer, figureBtn, settingBtn);
                             draw_figure_btns(renderer, figureBtn, settingBtn);
-                            draw_all_figures(renderer, circs, rects);
+                            draw_all_figures(renderer, circs, rects, ellps);
                             SDL_RenderPresent(renderer);
                             continue;
                         }
@@ -77,7 +77,7 @@ int main(int argc, char *args[])
 
                             draw_app(renderer, figureBtn, settingBtn);
                             draw_setting_btns(renderer, figureBtn, settingBtn);
-                            draw_all_figures(renderer, circs, rects);
+                            draw_all_figures(renderer, circs, rects, ellps);
                             SDL_RenderPresent(renderer);
                             continue;
                         }
@@ -94,10 +94,15 @@ int main(int argc, char *args[])
                                 Rect rect = Rect();
                                 rects.push_back(rect);
                             }
+                            else if (codeB == codeBtn::ellipse)
+                            {
+                                Ellips ellp = Ellips();
+                                ellps.push_back(ellp);
+                            }
 
                             draw_app(renderer, figureBtn, settingBtn);
                             draw_setting_btns(renderer, figureBtn, settingBtn);
-                            draw_all_figures(renderer, circs, rects);
+                            draw_all_figures(renderer, circs, rects, ellps);
                             SDL_RenderPresent(renderer);
                             continue;
                         }
@@ -112,7 +117,10 @@ int main(int argc, char *args[])
                             else if (codeB == codeBtn::rect)
                                 for (auto &&i : rects)
                                     i.move();
-                            draw_all_figures(renderer, circs, rects);
+                            else if (codeB == codeBtn::ellipse)
+                                for (auto &&i : ellps)
+                                    i.move();
+                            draw_all_figures(renderer, circs, rects, ellps);
                             SDL_RenderPresent(renderer);
                             continue;
                         }
@@ -134,30 +142,38 @@ int main(int argc, char *args[])
                                 rects[rects.size() - 1].~Rect();
                                 rects.pop_back();
                             }
-
+                            else if (codeB == codeBtn::ellipse)
+                            {
+                                if (ellps.size() < 1)
+                                    continue;
+                                ellps[ellps.size() - 1].~Ellips();
+                                ellps.pop_back();
+                            }
                             draw_app(renderer, figureBtn, settingBtn);
                             draw_setting_btns(renderer, figureBtn, settingBtn);
-                            draw_all_figures(renderer, circs, rects);
+                            draw_all_figures(renderer, circs, rects, ellps);
                             SDL_RenderPresent(renderer);
                             continue;
                         }
                     }
                     if (e.type == SDL_KEYDOWN)
                     {
-                        if (circs.size() > 0 || rects.size() > 0)
+                        if (circs.size() > 0 || rects.size() > 0 || ellps.size() > 0)
                         {
                             if (e.key.keysym.sym == SDLK_KP_PLUS)
                             {
                                 draw_app(renderer, figureBtn, settingBtn);
                                 draw_setting_btns(renderer, figureBtn, settingBtn);
-
                                 if (codeB == codeBtn::circle)
                                     for (auto &&i : circs)
                                         i.change_rad(5, true);
-                                else if (codeB == codeBtn::rect)
+                                if (codeB == codeBtn::rect)
                                     for (auto &&i : rects)
                                         i.change_size(5, true);
-                                draw_all_figures(renderer, circs, rects);
+                                if (codeB == codeBtn::ellipse)
+                                    for (auto &&i : ellps)
+                                        i.change_rad(6, 3, true);
+                                draw_all_figures(renderer, circs, rects, ellps);
                                 SDL_RenderPresent(renderer);
                                 continue;
                             }
@@ -168,10 +184,13 @@ int main(int argc, char *args[])
                                 if (codeB == codeBtn::circle)
                                     for (auto &&i : circs)
                                         i.change_rad(-5, false);
-                                else if (codeB == codeBtn::rect)
+                                if (codeB == codeBtn::rect)
                                     for (auto &&i : rects)
                                         i.change_size(-5, false);
-                                draw_all_figures(renderer, circs, rects);
+                                if (codeB == codeBtn::ellipse)
+                                    for (auto &&i : ellps)
+                                        i.change_rad(-6, -3, false);
+                                draw_all_figures(renderer, circs, rects, ellps);
                                 SDL_RenderPresent(renderer);
                                 continue;
                             }
@@ -191,11 +210,13 @@ int main(int argc, char *args[])
 }
 
 const void draw_all_figures(SDL_Renderer *renderer, const std::vector<Circle> &circs,
-                            const std::vector<Rect> &rects)
+                            const std::vector<Rect> &rects, const std::vector<Ellips> &ellps)
 {
     for (auto &&i : circs)
         i.show(renderer);
     for (auto &&i : rects)
+        i.show(renderer);
+    for (auto &&i : ellps)
         i.show(renderer);
 }
 
