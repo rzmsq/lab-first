@@ -2,9 +2,9 @@
 
 int main(int argc, char *args[])
 {
-    SDL_Window *window{NULL};
-    SDL_Surface *screenSurface{NULL};
-    SDL_Renderer *renderer{NULL};
+    SDL_Window *window{nullptr};
+    SDL_Surface *screenSurface{nullptr};
+    SDL_Renderer *renderer{nullptr};
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
         std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << '\n';
@@ -56,6 +56,7 @@ int main(int argc, char *args[])
                         if (e.button.button == SDL_BUTTON_LEFT && backBtn.is_pressed() &&
                             backBtn.isVisible)
                         {
+                            // Начальное окно
                             codeB = -1;
                             draw_app(renderer, figureBtn, settingBtn);
                             draw_figure_btns(renderer, figureBtn, settingBtn);
@@ -68,6 +69,7 @@ int main(int argc, char *args[])
                              (rectBtn.is_pressed() && rectBtn.isVisible) ||
                              (ellipseBtn.is_pressed() && ellipseBtn.isVisible)))
                         {
+                            // выбор фигуры
                             if (circleBtn.is_pressed())
                                 codeB = codeBtn::circle;
                             else if (rectBtn.is_pressed())
@@ -84,6 +86,7 @@ int main(int argc, char *args[])
                         if (e.button.button == SDL_BUTTON_LEFT && addBtn.is_pressed() &&
                             addBtn.isVisible)
                         {
+                            // добавление элемента
                             if (codeB == codeBtn::circle)
                             {
                                 Circle circ = Circle();
@@ -109,6 +112,7 @@ int main(int argc, char *args[])
                         if (e.button.button == SDL_BUTTON_LEFT && moveBtn.is_pressed() &&
                             moveBtn.isVisible)
                         {
+                            // движение фигуры
                             draw_app(renderer, figureBtn, settingBtn);
                             draw_setting_btns(renderer, figureBtn, settingBtn);
                             if (codeB == codeBtn::circle)
@@ -127,6 +131,7 @@ int main(int argc, char *args[])
                         if (e.button.button == SDL_BUTTON_LEFT && removeBtn.is_pressed() &&
                             removeBtn.isVisible)
                         {
+                            // удаление фигуры
                             if (codeB == codeBtn::circle)
                             {
                                 if (circs.size() < 1)
@@ -162,6 +167,7 @@ int main(int argc, char *args[])
                         {
                             if (e.key.keysym.sym == SDLK_KP_PLUS)
                             {
+                                // Увелечение радиуса
                                 draw_app(renderer, figureBtn, settingBtn);
                                 draw_setting_btns(renderer, figureBtn, settingBtn);
                                 if (codeB == codeBtn::circle)
@@ -179,6 +185,7 @@ int main(int argc, char *args[])
                             }
                             if (e.key.keysym.sym == SDLK_KP_MINUS)
                             {
+                                // уменьшение радиуса
                                 draw_app(renderer, figureBtn, settingBtn);
                                 draw_setting_btns(renderer, figureBtn, settingBtn);
                                 if (codeB == codeBtn::circle)

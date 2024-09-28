@@ -15,7 +15,8 @@
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
                 "circle.cpp",
-                "rect.cpp"
+                "rect.cpp",
+                "ellp.cpp"
             ],
             "options": {
                 "cwd": "${fileDirname}"
