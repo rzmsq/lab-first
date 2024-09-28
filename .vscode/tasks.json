@@ -14,7 +14,8 @@
                 "-lSDL2_gfx",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
-                "circle.cpp"
+                "circle.cpp",
+                "rect.cpp"
             ],
             "options": {
                 "cwd": "${fileDirname}"

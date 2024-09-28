@@ -50,12 +50,11 @@ const void Circle::move()
     std::random_device rd;
     std::mt19937 generator{rd()};
 
-    const int diap_x[2] = {-50, 50};
-    std::uniform_int_distribution<int> distribution_x(diap_x[0], diap_x[1]);
+    const int diap[2] = {-50, 50};
+    std::uniform_int_distribution<int> distribution_x(diap[0], diap[1]);
     int rand_x = distribution_x(generator);
 
-    const int diap_y[2] = {-50, 50};
-    std::uniform_int_distribution<int> distribution_y(diap_y[0], diap_y[1]);
+    std::uniform_int_distribution<int> distribution_y(diap[0], diap[1]);
     int rand_y = distribution_y(generator);
 
     this->x += rand_x;

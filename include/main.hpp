@@ -2,6 +2,7 @@
 
 #include "button.hpp"
 #include "circle.hpp"
+#include "rect.hpp"
 
 const int screen_width{1024};
 const int screen_height{640};
@@ -14,3 +15,5 @@ void draw_setting_btns(SDL_Renderer *renderer, std::vector<Button *> &figureBtn,
                        std::vector<Button *> &settingBtn);
 void draw_figure_btns(SDL_Renderer *renderer, std::vector<Button *> &figureBtn,
                       std::vector<Button *> &settingBtn);
+const void draw_all_figures(SDL_Renderer *renderer, const std::vector<Circle> &circs,
+                      const std::vector<Rect> &rects);

@@ -40,6 +40,8 @@ int main(int argc, char *args[])
             SDL_RenderPresent(renderer);
 
             std::vector<Circle> circs{};
+            std::vector<Rect> rects{};
+            std::vector<Rect> ellps{};
 
             SDL_Event e;
             bool quit{false};
@@ -54,10 +56,10 @@ int main(int argc, char *args[])
                         if (e.button.button == SDL_BUTTON_LEFT && backBtn.is_pressed() &&
                             backBtn.isVisible)
                         {
+                            codeB = -1;
                             draw_app(renderer, figureBtn, settingBtn);
                             draw_figure_btns(renderer, figureBtn, settingBtn);
-                            for (auto &&i : circs)
-                                i.show(renderer);
+                            draw_all_figures(renderer, circs, rects);
                             SDL_RenderPresent(renderer);
                             continue;
                         }
@@ -72,27 +74,30 @@ int main(int argc, char *args[])
                                 codeB = codeBtn::rect;
                             else if (ellipseBtn.is_pressed())
                                 codeB = codeBtn::ellipse;
+
                             draw_app(renderer, figureBtn, settingBtn);
                             draw_setting_btns(renderer, figureBtn, settingBtn);
-                            for (auto &&i : circs)
-                                i.show(renderer);
+                            draw_all_figures(renderer, circs, rects);
                             SDL_RenderPresent(renderer);
                             continue;
                         }
                         if (e.button.button == SDL_BUTTON_LEFT && addBtn.is_pressed() &&
                             addBtn.isVisible)
                         {
-                            Circle circ;
                             if (codeB == codeBtn::circle)
                             {
                                 Circle circ = Circle();
                                 circs.push_back(circ);
                             }
-                            
+                            else if (codeB == codeBtn::rect)
+                            {
+                                Rect rect = Rect();
+                                rects.push_back(rect);
+                            }
+
                             draw_app(renderer, figureBtn, settingBtn);
                             draw_setting_btns(renderer, figureBtn, settingBtn);
-                            for (auto &&i : circs)
-                                i.show(renderer);
+                            draw_all_figures(renderer, circs, rects);
                             SDL_RenderPresent(renderer);
                             continue;
                         }
@@ -101,54 +106,75 @@ int main(int argc, char *args[])
                         {
                             draw_app(renderer, figureBtn, settingBtn);
                             draw_setting_btns(renderer, figureBtn, settingBtn);
-                            for (auto &&i : circs)
-                            {
-                                i.move();
-                                i.show(renderer);
-                            }
-
+                            if (codeB == codeBtn::circle)
+                                for (auto &&i : circs)
+                                    i.move();
+                            else if (codeB == codeBtn::rect)
+                                for (auto &&i : rects)
+                                    i.move();
+                            draw_all_figures(renderer, circs, rects);
                             SDL_RenderPresent(renderer);
                             continue;
                         }
                         if (e.button.button == SDL_BUTTON_LEFT && removeBtn.is_pressed() &&
                             removeBtn.isVisible)
                         {
-                            circs[circs.size() - 1].~Circle();
-                            circs.pop_back();
+                            if (codeB == codeBtn::circle)
+                            {
+                                if (circs.size() < 1)
+                                    continue;
+
+                                circs[circs.size() - 1].~Circle();
+                                circs.pop_back();
+                            }
+                            else if (codeB == codeBtn::rect)
+                            {
+                                if (rects.size() < 1)
+                                    continue;
+                                rects[rects.size() - 1].~Rect();
+                                rects.pop_back();
+                            }
+
                             draw_app(renderer, figureBtn, settingBtn);
                             draw_setting_btns(renderer, figureBtn, settingBtn);
-                            for (auto &&i : circs)
-                                i.show(renderer);
+                            draw_all_figures(renderer, circs, rects);
                             SDL_RenderPresent(renderer);
                             continue;
                         }
                     }
                     if (e.type == SDL_KEYDOWN)
                     {
-                        if (e.key.keysym.sym == SDLK_KP_PLUS)
+                        if (circs.size() > 0 || rects.size() > 0)
                         {
-                            draw_app(renderer, figureBtn, settingBtn);
-                            draw_setting_btns(renderer, figureBtn, settingBtn);
-                            for (auto &&i : circs)
+                            if (e.key.keysym.sym == SDLK_KP_PLUS)
                             {
-                                i.change_rad(5, true);
-                                i.show(renderer);
-                            }
+                                draw_app(renderer, figureBtn, settingBtn);
+                                draw_setting_btns(renderer, figureBtn, settingBtn);
 
-                            SDL_RenderPresent(renderer);
-                            continue;
-                        }
-                        if (e.key.keysym.sym == SDLK_KP_MINUS)
-                        {
-                            draw_app(renderer, figureBtn, settingBtn);
-                            draw_setting_btns(renderer, figureBtn, settingBtn);
-                            for (auto &&i : circs)
-                            {
-                                i.change_rad(-5, true);
-                                i.show(renderer);
+                                if (codeB == codeBtn::circle)
+                                    for (auto &&i : circs)
+                                        i.change_rad(5, true);
+                                else if (codeB == codeBtn::rect)
+                                    for (auto &&i : rects)
+                                        i.change_size(5, true);
+                                draw_all_figures(renderer, circs, rects);
+                                SDL_RenderPresent(renderer);
+                                continue;
                             }
-                            SDL_RenderPresent(renderer);
-                            continue;
+                            if (e.key.keysym.sym == SDLK_KP_MINUS)
+                            {
+                                draw_app(renderer, figureBtn, settingBtn);
+                                draw_setting_btns(renderer, figureBtn, settingBtn);
+                                if (codeB == codeBtn::circle)
+                                    for (auto &&i : circs)
+                                        i.change_rad(-5, false);
+                                else if (codeB == codeBtn::rect)
+                                    for (auto &&i : rects)
+                                        i.change_size(-5, false);
+                                draw_all_figures(renderer, circs, rects);
+                                SDL_RenderPresent(renderer);
+                                continue;
+                            }
                         }
                     }
                 }
@@ -162,6 +188,15 @@ int main(int argc, char *args[])
     SDL_Quit();
 
     return 0;
+}
+
+const void draw_all_figures(SDL_Renderer *renderer, const std::vector<Circle> &circs,
+                            const std::vector<Rect> &rects)
+{
+    for (auto &&i : circs)
+        i.show(renderer);
+    for (auto &&i : rects)
+        i.show(renderer);
 }
 
 void draw_setting_btns(SDL_Renderer *renderer, std::vector<Button *> &figureBtn,

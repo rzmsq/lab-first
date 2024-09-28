@@ -4,7 +4,6 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <iostream>
-#include <variant>
 #include <string>
 #include <vector>
 #include <random>
