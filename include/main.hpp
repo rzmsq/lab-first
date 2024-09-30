@@ -7,6 +7,7 @@
 
 const int screen_width{1024};
 const int screen_height{640};
+std::vector<int> cartCoord{20, screen_width - 224, 20, screen_height - 40};
 
 void draw_cart(SDL_Renderer *renderer);
 void draw_btn(SDL_Renderer *renderer, Button &btn);

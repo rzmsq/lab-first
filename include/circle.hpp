@@ -13,6 +13,6 @@ public:
                     const int &_r, const int &_g, const int &_b, const int &_a);
 
     const void show(SDL_Renderer *renderer) const;
-    const void change_rad(const int &_rad, const bool &flg);
-    const void move();
+    const void change_rad(const int &_rad, const bool &flg, std::vector<int> &cartCoord);
+    const void move(std::vector<int> &cartCoord);
 };

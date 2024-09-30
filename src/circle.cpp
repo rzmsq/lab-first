@@ -34,9 +34,13 @@ const void Circle::show(SDL_Renderer *renderer) const
     circleRGBA(renderer, x, y, rad, r, g, b, a);
 }
 
-const void Circle::change_rad(const int &_rad, const bool &flg)
+const void Circle::change_rad(const int &_rad, const bool &flg, std::vector<int> &cartCoord)
 {
-    if (this->rad > 273 && flg)
+    if (((this->x + this->rad) > cartCoord[1] ||
+         (this->x - this->rad) < cartCoord[0] ||
+         (this->y + this->rad) > cartCoord[3] ||
+         (this->y - this->rad) < cartCoord[2]) &&
+        flg)
         return;
     else if (this->rad < 8 && !flg)
         return;
@@ -44,7 +48,7 @@ const void Circle::change_rad(const int &_rad, const bool &flg)
     this->rad += _rad;
 }
 
-const void Circle::move()
+const void Circle::move(std::vector<int> &cartCoord)
 {
     std::random_device rd;
     std::mt19937 generator{rd()};
@@ -59,7 +63,10 @@ const void Circle::move()
     this->x += rand_x;
     this->y += rand_y;
 
-    if (this->x < 20 || this->x > 810 || this->y < 20 || this->y > 620)
+    if ((this->x + this->rad) > cartCoord[1] ||
+         (this->x - this->rad) < cartCoord[0] ||
+         (this->y + this->rad) > cartCoord[3] ||
+         (this->y - this->rad) < cartCoord[2])
     {
         this->x = center_cart_x;
         this->y = center_cart_y;

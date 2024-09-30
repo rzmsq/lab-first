@@ -38,9 +38,13 @@ const void Ellips::show(SDL_Renderer *renderer) const
     filledEllipseRGBA(renderer, x, y, rx, ry, r, g, b, a);
 }
 
-const void Ellips::change_rad(const int &_rx, const int &_ry, const bool &flg)
+const void Ellips::change_rad(const int &_rx, const int &_ry, const bool &flg, std::vector<int> &cartCoord)
 {
-    if (this->rx > 273 && flg)
+    if (((this->x + this->rx) > cartCoord[1] ||
+         (this->x - this->rx) < cartCoord[0] ||
+         (this->y + this->ry) > cartCoord[3] ||
+         (this->y - this->ry) < cartCoord[2]) &&
+        flg)
         return;
     else if (this->rx < 8 && !flg)
         return;
@@ -49,7 +53,7 @@ const void Ellips::change_rad(const int &_rx, const int &_ry, const bool &flg)
     this->ry += _ry;
 }
 
-const void Ellips::move()
+const void Ellips::move(std::vector<int> &cartCoord)
 {
     std::random_device rd;
     std::mt19937 generator{rd()};
@@ -64,7 +68,10 @@ const void Ellips::move()
     this->x += rand_x;
     this->y += rand_y;
 
-    if (this->x < 20 || this->x > 810 || this->y < 20 || this->y > 620)
+    if (((this->x + this->rx) > cartCoord[1] ||
+         (this->x - this->rx) < cartCoord[0] ||
+         (this->y + this->ry) > cartCoord[3] ||
+         (this->y - this->ry) < cartCoord[2]))
     {
         this->x = center_cart_x;
         this->y = center_cart_y;

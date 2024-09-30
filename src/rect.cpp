@@ -41,9 +41,11 @@ const void Rect::show(SDL_Renderer *renderer) const
                   this->r, this->g, this->b, this->a);
 }
 
-const void Rect::change_size(const int &_size, const bool &flg)
+const void Rect::change_size(const int &_size, const bool &flg, std::vector<int> &cartCoord)
 {
-    if ((this->x1 < 35 || this->x2 > 780 || this->y1 < 35 || this->y2 > 580) && flg)
+    if (((this->x1 < cartCoord[0] || this->x2 > cartCoord[1] ||
+          this->y1 < cartCoord[2] || this->y2 > cartCoord[3])) &&
+        flg)
         return;
     else if ((this->x2 - this->x1 < 10 || this->y2 - this->y1 < 10) && !flg)
         return;
@@ -54,7 +56,7 @@ const void Rect::change_size(const int &_size, const bool &flg)
     this->y2 += _size;
 }
 
-const void Rect::move()
+const void Rect::move(std::vector<int> &cartCoord)
 {
     std::random_device rd;
     std::mt19937 generator{rd()};
@@ -71,7 +73,8 @@ const void Rect::move()
     this->y1 += rand_y;
     this->y2 += rand_y;
 
-    if (this->x1 < 20 || this->x2 > 800 || this->y1 < 20 || this->y2 > 600)
+    if (this->x1 < cartCoord[0] || this->x2 > cartCoord[1] ||
+        this->y1 < cartCoord[2] || this->y2 > cartCoord[3])
     {
         this->x1 = center_cart_x - 40;
         this->y1 = center_cart_y - 30;

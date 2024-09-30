@@ -117,13 +117,13 @@ int main(int argc, char *args[])
                             draw_setting_btns(renderer, figureBtn, settingBtn);
                             if (codeB == codeBtn::circle)
                                 for (auto &&i : circs)
-                                    i.move();
+                                    i.move(cartCoord);
                             else if (codeB == codeBtn::rect)
                                 for (auto &&i : rects)
-                                    i.move();
+                                    i.move(cartCoord);
                             else if (codeB == codeBtn::ellipse)
                                 for (auto &&i : ellps)
-                                    i.move();
+                                    i.move(cartCoord);
                             draw_all_figures(renderer, circs, rects, ellps);
                             SDL_RenderPresent(renderer);
                             continue;
@@ -172,13 +172,13 @@ int main(int argc, char *args[])
                                 draw_setting_btns(renderer, figureBtn, settingBtn);
                                 if (codeB == codeBtn::circle)
                                     for (auto &&i : circs)
-                                        i.change_rad(5, true);
+                                        i.change_rad(5, true, cartCoord);
                                 if (codeB == codeBtn::rect)
                                     for (auto &&i : rects)
-                                        i.change_size(5, true);
+                                        i.change_size(5, true, cartCoord);
                                 if (codeB == codeBtn::ellipse)
                                     for (auto &&i : ellps)
-                                        i.change_rad(6, 3, true);
+                                        i.change_rad(6, 3, true, cartCoord);
                                 draw_all_figures(renderer, circs, rects, ellps);
                                 SDL_RenderPresent(renderer);
                                 continue;
@@ -190,13 +190,13 @@ int main(int argc, char *args[])
                                 draw_setting_btns(renderer, figureBtn, settingBtn);
                                 if (codeB == codeBtn::circle)
                                     for (auto &&i : circs)
-                                        i.change_rad(-5, false);
+                                        i.change_rad(-5, false, cartCoord);
                                 if (codeB == codeBtn::rect)
                                     for (auto &&i : rects)
-                                        i.change_size(-5, false);
+                                        i.change_size(-5, false, cartCoord);
                                 if (codeB == codeBtn::ellipse)
                                     for (auto &&i : ellps)
-                                        i.change_rad(-6, -3, false);
+                                        i.change_rad(-6, -3, false, cartCoord);
                                 draw_all_figures(renderer, circs, rects, ellps);
                                 SDL_RenderPresent(renderer);
                                 continue;
@@ -269,10 +269,10 @@ void draw_cart(SDL_Renderer *renderer)
 {
     // поверхность коорд плоскости
     SDL_Rect cartRect;
-    cartRect.w = screen_width - 224;
-    cartRect.h = screen_height - 40;
-    cartRect.x = 20;
-    cartRect.y = 20;
+    cartRect.w = cartCoord[1];
+    cartRect.h = cartCoord[3];
+    cartRect.x = cartCoord[0];
+    cartRect.y = cartCoord[2];
     SDL_SetRenderDrawColor(renderer, 0x69, 0x69, 0x69, 0xFF);
     SDL_RenderFillRect(renderer, &cartRect);
     SDL_RenderDrawRect(renderer, &cartRect);
