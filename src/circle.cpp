@@ -5,16 +5,12 @@ Circle::Circle()
     this->x = center_cart_x;
     this->y = center_cart_y;
 
-    std::random_device rd;
-    std::mt19937 generator{rd()};
-    std::uniform_int_distribution<int> distribution_x(10, 50);
-    int rand_rad = distribution_x(generator);
-    this->rad = rand_rad;
+    this->rad = rand_int(10, 50);
 
-    this->r = 255;
-    this->g = 255;
-    this->b = 255,
-    this->a = 255;
+    this->r = 0xFF;
+    this->g = 0xFF;
+    this->b = 0xFF,
+    this->a = 0xFF;
 }
 
 Circle::Circle(const int &_x, const int &_y, const int &_rad,
@@ -22,51 +18,41 @@ Circle::Circle(const int &_x, const int &_y, const int &_rad,
 {
     this->x = center_cart_x + _x;
     this->y = center_cart_y + _y;
-    this->rad = rad;
-    this->r = r;
-    this->g = g;
-    this->b = b,
-    this->a = a;
+    this->rad = _rad;
+    this->r = _r;
+    this->g = _g;
+    this->b = _b,
+    this->a = _a;
 }
 
-const void Circle::show(SDL_Renderer *renderer) const
+const void Circle::show(SDL_Renderer *_renderer) const
 {
-    circleRGBA(renderer, x, y, rad, r, g, b, a);
+    circleRGBA(_renderer, x, y, rad, r, g, b, a);
 }
 
-const void Circle::change_rad(const int &_rad, const bool &flg, std::vector<int> &cartCoord)
+const void Circle::change_rad(const int &_rad, const bool &_flg, const std::vector<int> &_cartCoord)
 {
-    if (((this->x + this->rad) > cartCoord[1] ||
-         (this->x - this->rad) < cartCoord[0] ||
-         (this->y + this->rad) > cartCoord[3] ||
-         (this->y - this->rad) < cartCoord[2]) &&
-        flg)
+    if (((this->x + this->rad) > _cartCoord[coord::cart::x2] ||
+         (this->x - this->rad) < _cartCoord[coord::cart::x1] ||
+         (this->y + this->rad) > _cartCoord[coord::cart::y2] ||
+         (this->y - this->rad) < _cartCoord[coord::cart::y1]) &&
+        _flg)
         return;
-    else if (this->rad < 8 && !flg)
+    else if (this->rad < this->minSize && !_flg)
         return;
 
     this->rad += _rad;
 }
 
-const void Circle::move(std::vector<int> &cartCoord)
+const void Circle::move(const std::vector<int> &_cartCoord)
 {
-    std::random_device rd;
-    std::mt19937 generator{rd()};
+    this->x += rand_int(-50, 50);
+    this->y += rand_int(-50, 50);
 
-    const int diap[2] = {-50, 50};
-    std::uniform_int_distribution<int> distribution_x(diap[0], diap[1]);
-    int rand_x = distribution_x(generator);
-
-    std::uniform_int_distribution<int> distribution_y(diap[0], diap[1]);
-    int rand_y = distribution_y(generator);
-
-    this->x += rand_x;
-    this->y += rand_y;
-
-    if ((this->x + this->rad) > cartCoord[1] ||
-         (this->x - this->rad) < cartCoord[0] ||
-         (this->y + this->rad) > cartCoord[3] ||
-         (this->y - this->rad) < cartCoord[2])
+    if ((this->x + this->rad) > _cartCoord[coord::cart::x2] ||
+        (this->x - this->rad) < _cartCoord[coord::cart::x1] ||
+        (this->y + this->rad) > _cartCoord[coord::cart::y2] ||
+        (this->y - this->rad) < _cartCoord[coord::cart::y1])
     {
         this->x = center_cart_x;
         this->y = center_cart_y;

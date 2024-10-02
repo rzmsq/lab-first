@@ -1,3 +1,5 @@
+#pragma once
+
 #include "libs.hpp"
 
 struct Button
@@ -23,7 +25,8 @@ struct Button
         int x, y;
         SDL_GetMouseState(&x, &y);
         if (x <= (btn.x + btn.w) && x >= btn.x &&
-            y <= (btn.y + btn.h) && y >= btn.y)
+            y <= (btn.y + btn.h) && y >= btn.y &&
+            this->isVisible)
             return true;
         return false;
     }
